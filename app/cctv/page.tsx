@@ -77,31 +77,19 @@ const ObjectDetection = () => {
   
 
   return (
-    <div className="mx-auto p-4 flex justify-center">
+    <div className="mx-auto p-4 flex justify-center bg-green-100">
       <div>
-        <h1 className="font-bold text-3xl md:text-5xl tracking-tight text-black py-10">Object Detector 📷 👁️</h1>
+        <h1 className="font-bold text-3xl md:text-5xl tracking-tight text-black py-10 text-center">Detecting Animals ⚠️</h1>
         <div className="flex flex-col bg-opacity-80">
           <div className="relative">
             {loading && (
               <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center">
-                <CircleLoader color="#ff00ff" size={80} />
+                <CircleLoader color="#33d44e" size={80} />
               </div>
             )}
             <video ref={videoRef} className="w-full max-w-4xl rounded-lg shadow-xl my-5" />
             <canvas ref={canvasRef} className="absolute top-0 left-0 w-full h-full" />
           </div>
-            <div className="flex justify-center">
-              <div className="bg-white bg-opacity-40 rounded-lg shadow-lg my-10 w-4/5">
-                {predictions.map((prediction: any, index: number) => (
-                  <div key={index} className="py-2 px-5">
-                    <p className="text-lg font-bold flex gap-2 items-center">{prediction.class}</p>
-                    <p className="flex gap-2 items-center">
-                      <FiTarget /> Accuracy: {Math.round(prediction.score * 100)}%
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>        
       </div>
     </div>
