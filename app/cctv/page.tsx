@@ -12,27 +12,13 @@ const ObjectDetection = () => {
   const [predictions, setPredictions]: any[] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // latitudes
-  const [currentLocation, setCurrentLocation] = useState<GeolocationCoordinates | null>(null);
+  // coordinates
+  const [currentCoordinates, setcurrentCoordinates] = useState<GeolocationCoordinates | null>(null);
 
   // location
   const [currentCity, setCurrentCity] = useState('');
 
   useEffect(() => {
-    const fetchLocation = () => {
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          setCurrentLocation(position.coords);
-          const city = await getCityFromCoordinates(position.coords.latitude, position.coords.longitude);
-          setCurrentCity(city);
-          console.log(city);
-        },
-        (error) => {
-          console.error('Error getting user location:', error);
-        }
-      );
-    };
-
     const runObjectDetection = async () => {
       setLoading(true);
       const video = videoRef.current;
@@ -51,21 +37,7 @@ const ObjectDetection = () => {
       setLoading(false);
     };
 
-    const getCityFromCoordinates = async (latitude: any, longitude: any) => {
-      try {
-        const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
-        const data = await response.json();
-        console.log(data)
-        return `${data.address.road}, ${data.address.suburb}, ${data.address.city}`;
-      } catch (error) {
-        console.error('Error getting city from coordinates:', error);
-        return '';
-      }
-    };
-  
-
     runObjectDetection();
-    fetchLocation();
   }, []);
 
   const drawBoundingBoxes = (predictions: any[]) => {
@@ -90,6 +62,33 @@ const ObjectDetection = () => {
       // Check if the class is one of the specified animal classes
       if (className === 'bird' || className === 'cat' || className === 'dog' || className === 'horse' || className === 'sheep' ||
           className === 'cow' || className === 'elephant' || className === 'bear' || className === 'zebra' || className === 'giraffe') {
+        const fetchLocation = () => {
+          navigator.geolocation.getCurrentPosition(
+            async (position) => {
+              setcurrentCoordinates(position.coords);
+              console.log(position.coords) // getting the coordinates
+              const city = await getCityFromCoordinates(position.coords.latitude, position.coords.longitude);
+              setCurrentCity(city);
+              console.log(city); // getting the city address
+            },
+            (error) => {
+              console.error('Error getting user location:', error);
+            }
+          );
+        };
+    
+        const getCityFromCoordinates = async (latitude: any, longitude: any) => {
+          try {
+            const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
+            const data = await response.json();
+            return `${data.address.road}, ${data.address.suburb}, ${data.address.city}`;
+          } catch (error) {
+            console.error('Error getting city from coordinates:', error);
+            return '';
+          }
+        };
+        fetchLocation();   
+
         const [x, y, width, height] = bbox;
         context.beginPath();
         context.rect(x, y, width, height);
@@ -106,6 +105,8 @@ const ObjectDetection = () => {
         );
       }
     });
+
+ 
   };
   
 
