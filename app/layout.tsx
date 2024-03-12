@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/Navbar';
+import ConvexClientProvider from './ConvexClientProvider';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -17,7 +18,7 @@ export default function RootLayout({
     <html lang='en'>
       <body className='bg-[#eaf9ea]'>
         <Navbar />
-        {children}
+        <ConvexClientProvider>{children}</ConvexClientProvider>
       </body>
     </html>
   );
