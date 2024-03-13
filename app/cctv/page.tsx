@@ -1,16 +1,19 @@
 'use client'
 
+import { useQuery, useMutation } from 'convex/react';
 import { useEffect, useRef, useState } from 'react';
 import * as cocoSsd from '@tensorflow-models/coco-ssd';
 import '@tensorflow/tfjs';
 import { FiTarget } from 'react-icons/fi';
 import { CircleLoader } from 'react-spinners';
+import { api } from '@/convex/_generated/api';
 
 const ObjectDetection = () => {
   const videoRef: any = useRef(null);
   const canvasRef = useRef(null);
   const [predictions, setPredictions]: any[] = useState([]);
   const [loading, setLoading] = useState(true);
+  const addTask = useMutation(api.tasks.send);        
 
   // coordinates
   const [currentCoordinates, setcurrentCoordinates] = useState<GeolocationCoordinates | null>(null);
@@ -43,7 +46,7 @@ const ObjectDetection = () => {
   const drawBoundingBoxes = (predictions: any[]) => {
     const video = videoRef.current;
     const canvas:any = canvasRef.current;
-    const context: CanvasRenderingContext2D | null = canvas.getContext('2d');
+    const context: CanvasRenderingContext2D | null = canvas?.getContext('2d');
   
     if (!context) {
       console.error('Failed to get 2D context for canvas');
@@ -66,10 +69,15 @@ const ObjectDetection = () => {
           navigator.geolocation.getCurrentPosition(
             async (position) => {
               setcurrentCoordinates(position.coords);
-              console.log(position.coords) // getting the coordinates
+              console.log(position.coords) // getting the coordinates    
               const city = await getCityFromCoordinates(position.coords.latitude, position.coords.longitude);
               setCurrentCity(city);
               console.log(city); // getting the city address
+
+              await addTask({
+                location: { latitude: position.coords.latitude, longitude: position.coords.longitude},
+                address: city,
+              });    
             },
             (error) => {
               console.error('Error getting user location:', error);
