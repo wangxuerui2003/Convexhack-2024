@@ -11,6 +11,10 @@ export const list = query({
   },
 });
 
+export const generateUploadUrl = mutation(async (ctx) => {
+  return await ctx.storage.generateUploadUrl();
+});
+
 export const send = mutation({
   args: {
     location: v.object({
@@ -18,9 +22,13 @@ export const send = mutation({
       longitude: v.number(),
     }),
     address: v.string(),
+    imageStorageId: v.id('_storage'),
   },
-  handler: async (ctx, { location, address }) => {
-    // Send a new message.
-    await ctx.db.insert('tasks', { location, address });
+  handler: async (ctx, args) => {
+    await ctx.db.insert('tasks', {
+      location: args.location,
+      address: args.address,
+      imageStorageId: args.imageStorageId,
+    });
   },
 });

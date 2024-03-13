@@ -8,5 +8,6 @@ export default defineSchema({
       longitude: v.number(),
     }),
     address: v.string(),
+    imageStorageId: v.id('_storage'),
   }),
 });
