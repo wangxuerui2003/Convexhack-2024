@@ -1,12 +1,11 @@
 'use client';
 
 import Cards from '@/components/cards';
-import { useQuery, useMutation } from 'convex/react';
+import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 
 const Tasks = () => {
   const tasks = useQuery(api.tasks.list);
-  const addTask = useMutation(api.tasks.send);
 
   return (
     <div className='mx-auto p-4 flex justify-center bg-green-100'>
