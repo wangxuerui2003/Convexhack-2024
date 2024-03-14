@@ -25,6 +25,7 @@ function isAnimal(detection: string): boolean {
 }
 
 const ObjectDetection = () => {
+  const currentDate = new Date();
   const videoRef: any = useRef(null);
   const canvasRef = useRef(null);
   const [predictions, setPredictions]: any[] = useState([]);
@@ -54,7 +55,7 @@ const ObjectDetection = () => {
         const predictions = await model.detect(video);
         setPredictions(predictions);
         drawBoundingBoxes(predictions);
-      }, 60000);
+      }, 5000);
       setLoading(false);
     };
 
@@ -95,6 +96,13 @@ const ObjectDetection = () => {
             );
             setCurrentCity(city);
             console.log(city); // getting the city address
+
+            console.log("currentDate: ")
+            console.log(currentDate)
+
+
+            console.log("currentDate: ")
+            console.log(typeof currentDate);
 
             if (!videoRef.current) {
               return;
