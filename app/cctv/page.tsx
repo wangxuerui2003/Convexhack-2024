@@ -24,25 +24,30 @@ function isAnimal(detection: string): boolean {
   );
 }
 
-const ObjectDetection = () => {
-  const currentDate = new Date();
+async function getCityFromCoordinates(latitude: number, longitude: number) {
+  try {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
+    );
+    const data = await response.json();
+    return `${data.address.road !== undefined ? data.address.road + ', ' : ''}${
+      data.address.suburb
+    }, ${data.address.city}`;
+  } catch (error) {
+    console.error('Error getting city from coordinates:', error);
+    return '';
+  }
+}
+
+export default function AnimalDetection() {
   const videoRef: any = useRef(null);
   const canvasRef = useRef(null);
-  const [predictions, setPredictions]: any[] = useState([]);
   const [loading, setLoading] = useState(true);
-  const addTask = useMutation(api.tasks.send);
+  const addTask = useMutation(api.tasks.addTask);
   const generateUploadUrl = useMutation(api.tasks.generateUploadUrl);
-
-  // coordinates
-  const [currentCoordinates, setcurrentCoordinates] =
-    useState<GeolocationCoordinates | null>(null);
-
-  // location
-  const [currentCity, setCurrentCity] = useState('');
 
   useEffect(() => {
     const runObjectDetection = async () => {
-      setLoading(true);
       const video = videoRef.current;
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: 'environment' },
@@ -53,16 +58,57 @@ const ObjectDetection = () => {
       const model = await cocoSsd.load();
       setInterval(async () => {
         const predictions = await model.detect(video);
-        setPredictions(predictions);
-        drawBoundingBoxes(predictions);
-      }, 5000);
+        processPredictions(predictions);
+      }, 10000);
       setLoading(false);
     };
 
     runObjectDetection();
   }, []);
 
-  const drawBoundingBoxes = (predictions: cocoSsd.DetectedObject[]) => {
+  const createTask = async (
+    taskAddress: string,
+    taskLocation: GeolocationCoordinates
+  ) => {
+    if (!videoRef.current) {
+      return;
+    }
+
+    const screenshotCanvas = await html2canvas(videoRef.current);
+    screenshotCanvas.toBlob(async (blob) => {
+      if (!blob) {
+        return;
+      }
+
+      // save canvas screenshot to a file object
+      const screenshotFile = new File([blob], 'screenshot.png', {
+        type: 'image/png',
+      });
+
+      const postUrl = await generateUploadUrl();
+
+      const result = await fetch(postUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': screenshotFile.type },
+        body: screenshotFile,
+      });
+
+      const { storageId } = await result.json();
+
+      await addTask({
+        location: {
+          latitude: taskLocation.latitude,
+          longitude: taskLocation.longitude,
+        },
+        address: taskAddress,
+        imageStorageId: storageId,
+      });
+
+      console.log('Task created');
+    }, 'image/png');
+  };
+
+  const processPredictions = (predictions: cocoSsd.DetectedObject[]) => {
     const video = videoRef.current;
     const canvas: any = canvasRef.current;
     const context: CanvasRenderingContext2D | null = canvas?.getContext('2d');
@@ -75,88 +121,40 @@ const ObjectDetection = () => {
     const { videoWidth, videoHeight } = video as HTMLVideoElement;
     canvas.width = videoWidth;
     canvas.height = videoHeight;
-
     context.clearRect(0, 0, canvas.width, canvas.height);
 
+    let taskCreated: boolean = false;
+
     predictions.forEach((prediction: cocoSsd.DetectedObject) => {
+      if (taskCreated === true) {
+        return;
+      }
+
       const { class: className, score, bbox } = prediction;
 
       if (!isAnimal(className)) {
         return;
       }
 
-      const fetchLocation = () => {
-        navigator.geolocation.getCurrentPosition(
-          async (position) => {
-            setcurrentCoordinates(position.coords);
-            console.log(position.coords); // getting the coordinates
-            const city = await getCityFromCoordinates(
-              position.coords.latitude,
-              position.coords.longitude
-            );
-            setCurrentCity(city);
-            console.log(city); // getting the city address
+      console.log('No way');
 
-            console.log("currentDate: ")
-            console.log(currentDate)
+      taskCreated = true;
 
-
-            console.log("currentDate: ")
-            console.log(typeof currentDate);
-
-            if (!videoRef.current) {
-              return;
-            }
-
-            const screenshotCanvas = await html2canvas(videoRef.current);
-            screenshotCanvas.toBlob(async (blob) => {
-              if (blob) {
-                // Create a File object from the Blob
-                const screenshotFile = new File([blob], 'screenshot.png', {
-                  type: 'image/png',
-                });
-
-                const postUrl = await generateUploadUrl();
-
-                const result = await fetch(postUrl, {
-                  method: 'POST',
-                  headers: { 'Content-Type': screenshotFile.type },
-                  body: screenshotFile,
-                });
-
-                const { storageId } = await result.json();
-
-                await addTask({
-                  location: {
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                  },
-                  address: city,
-                  imageStorageId: storageId,
-                });
-              }
-            }, 'image/png');
-          },
-          (error) => {
-            console.error('Error getting user location:', error);
-          }
-        );
-      };
-
-      const getCityFromCoordinates = async (latitude: any, longitude: any) => {
-        try {
-          const response = await fetch(
-            `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const taskAddress = await getCityFromCoordinates(
+            position.coords.latitude,
+            position.coords.longitude
           );
-          const data = await response.json();
-          return `${data.address.road}, ${data.address.suburb}, ${data.address.city}`;
-        } catch (error) {
-          console.error('Error getting city from coordinates:', error);
-          return '';
-        }
-      };
-      fetchLocation();
 
+          await createTask(taskAddress, position.coords);
+        },
+        (error) => {
+          console.error('Error getting user location:', error);
+        }
+      );
+
+      // draw the rectangle around the object
       const [x, y, width, height] = bbox;
       context.beginPath();
       context.rect(x, y, width, height);
@@ -200,6 +198,4 @@ const ObjectDetection = () => {
       </div>
     </div>
   );
-};
-
-export default ObjectDetection;
+}

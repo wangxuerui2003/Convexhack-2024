@@ -5,7 +5,7 @@ import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 
 const Tasks = () => {
-  const tasks = useQuery(api.tasks.list);
+  const tasks = useQuery(api.tasks.listTask);
 
   return (
     <div className='mx-auto p-4 flex justify-center bg-green-100'>
@@ -15,7 +15,7 @@ const Tasks = () => {
         </h1>
         <div className='flex flex-col gap-3'>
           {tasks?.map((task) => (
-            <Cards task={task} />
+            <Cards {...task} />
           ))}
         </div>
       </div>

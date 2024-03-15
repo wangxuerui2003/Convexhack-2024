@@ -1,13 +1,17 @@
 import { query, mutation } from './_generated/server';
 import { v } from 'convex/values';
 
-export const list = query({
+export const listTask = query({
   args: {},
   handler: async (ctx) => {
-    // Grab the most recent messages.
     const tasks = await ctx.db.query('tasks').order('desc').take(100);
-    // Reverse the list so that it's in a chronological order.
-    return tasks.reverse();
+
+    return Promise.all(
+      tasks.map(async (task) => ({
+        ...task,
+        imageUrl: (await ctx.storage.getUrl(task.imageStorageId)) as string,
+      }))
+    );
   },
 });
 
@@ -15,7 +19,7 @@ export const generateUploadUrl = mutation(async (ctx) => {
   return await ctx.storage.generateUploadUrl();
 });
 
-export const send = mutation({
+export const addTask = mutation({
   args: {
     location: v.object({
       latitude: v.number(),
@@ -30,5 +34,12 @@ export const send = mutation({
       address: args.address,
       imageStorageId: args.imageStorageId,
     });
+  },
+});
+
+export const deleteTask = mutation({
+  args: { id: v.id('tasks') },
+  handler: async (ctx, args) => {
+    await ctx.db.delete(args.id);
   },
 });
