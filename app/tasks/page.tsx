@@ -15,7 +15,7 @@ const Tasks = () => {
         </h1>
         <div className='flex flex-col gap-3'>
           {tasks?.map((task) => (
-            <Cards {...task} />
+            <Cards key={parseInt(task._id)} {...task} />
           ))}
         </div>
       </div>
