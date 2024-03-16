@@ -173,11 +173,15 @@ export default function AnimalDetection() {
   };
 
   return (
-    <div className='mx-auto p-4 flex justify-center bg-green-100'>
+    <div className='mx-auto p-4 flex justify-center bg-green-100 overflow-hidden'>
       <div>
-        <h1 className='font-bold text-3xl md:text-5xl tracking-tight text-black py-10 text-center'>
+        <h1 className='font-bold text-3xl md:text-5xl tracking-tight text-black text-center'>
           Detecting Animals ⚠️
         </h1>
+        <p className='text-center text-slate-500 py-5'>
+          You will receive notification in your task after a 10-second interval
+          following the animal's period of remaining stationary
+        </p>
         <div className='flex flex-col bg-opacity-80'>
           <div className='relative'>
             {loading && (
@@ -187,7 +191,7 @@ export default function AnimalDetection() {
             )}
             <video
               ref={videoRef}
-              className='w-full max-w-4xl rounded-lg shadow-xl my-5'
+              className='w-min h-auto rounded-lg shadow-xl object-contain mx-auto'
             />
             <canvas
               ref={canvasRef}
