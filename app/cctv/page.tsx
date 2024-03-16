@@ -180,7 +180,7 @@ export default function AnimalDetection() {
         </h1>
         <p className='text-center text-slate-500 py-5'>
           You will receive notification in your task after a 10-second interval
-          following the animal's period of remaining stationary
+          following the animal&apos;s period of remaining stationary
         </p>
         <div className='flex flex-col bg-opacity-80'>
           <div className='relative'>
