@@ -2,10 +2,9 @@ import { Id } from '@/convex/_generated/dataModel';
 import TaskImage from './TaskImage';
 import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
-
-import { FaLocationDot } from "react-icons/fa6";
-import { TiTickOutline } from "react-icons/ti";
-import { MdTimer } from "react-icons/md";
+import { FaLocationDot } from 'react-icons/fa6';
+import { TiTickOutline } from 'react-icons/ti';
+import { MdTimer } from 'react-icons/md';
 
 type Task = {
   _id: Id<'tasks'>;
@@ -46,19 +45,28 @@ export default function Cards(task: Task) {
     <div className='flex flex-col items-center md:flex-row md:max-w-xl relative overflow-hidden rounded-lg border border-gray-300 bg-white p-4 shadow-md mx-7'>
       <TaskImage {...task} />
 
-      <div className='flex flex-col justify-between ml-4'>          
-        <h5 className='font-bold text-black mb-2 flex gap-2 items-center'><span className='text-3xl'><FaLocationDot/></span> {task.address}</h5>
+      <div className='flex flex-col justify-between ml-4'>
+        <h5 className='font-bold text-black mb-2 flex gap-2 items-center'>
+          <span className='text-3xl'>
+            <FaLocationDot />
+          </span>{' '}
+          {task.address}
+        </h5>
         <div className='flex flex-col space-y-2'>
           <div className='text-sm text-gray-500'>
-            <span className='font-semibold'>Latitude:</span> {task.location.latitude}
+            <span className='font-semibold'>Latitude:</span>{' '}
+            {task.location.latitude}
           </div>
           <div className='text-sm text-gray-500'>
-            <span className='font-semibold'>Longitude:</span> {task.location.longitude}
+            <span className='font-semibold'>Longitude:</span>{' '}
+            {task.location.longitude}
           </div>
 
-          <p className='text-xs text-gray-400 flex items-center'><MdTimer /> : {timeAgo(task._creationTime)}</p>    
+          <p className='text-xs text-gray-400 flex items-center'>
+            <MdTimer /> : {timeAgo(task._creationTime)}
+          </p>
         </div>
-        <div className='flex justify-end'> 
+        <div className='flex justify-end'>
           <button
             className='mx-2 px-2 py-2 bg-black text-white rounded hover:bg-green-100 hover:text-black flex-shrink-0'
             onClick={() => {
@@ -68,11 +76,8 @@ export default function Cards(task: Task) {
           >
             <TiTickOutline />
           </button>
-        </div>            
+        </div>
       </div>
-
-
     </div>
-
   );
 }
