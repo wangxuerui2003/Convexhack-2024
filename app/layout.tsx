@@ -19,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body className='bg-[#eaf9ea]'>
+      <body className='bg-green-100'>
         <Navbar />
         <ConvexClientProvider>{children}</ConvexClientProvider>
       </body>
