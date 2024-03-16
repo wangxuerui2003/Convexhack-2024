@@ -15,7 +15,7 @@ type Task = {
 export default function TaskImage({ imageUrl }: Task) {
   return (
     <img
-      className='rounded-t-lg h-max md:w-48 md:rounded-none md:rounded-s-lg'
+      className='h-max md:w-48 rounded'
       src={imageUrl}
       alt='task image'
     />
