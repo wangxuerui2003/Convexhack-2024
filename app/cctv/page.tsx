@@ -1,10 +1,9 @@
 'use client';
 
-import { useQuery, useMutation } from 'convex/react';
+import { useMutation } from 'convex/react';
 import { useEffect, useRef, useState } from 'react';
 import * as cocoSsd from '@tensorflow-models/coco-ssd';
 import '@tensorflow/tfjs';
-import { FiTarget } from 'react-icons/fi';
 import { CircleLoader } from 'react-spinners';
 import { api } from '@/convex/_generated/api';
 import html2canvas from 'html2canvas';
