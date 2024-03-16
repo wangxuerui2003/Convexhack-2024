@@ -178,6 +178,8 @@ export default function AnimalDetection() {
         <h1 className='font-bold text-3xl md:text-5xl tracking-tight text-black py-10 text-center'>
           Detecting Animals ⚠️
         </h1>
+        <p className='text-center text-slate-500 pb-5'>You will receive notification in your task after a 10-second interval following the animal's period of remaining stationary</p>
+
         <div className='flex flex-col bg-opacity-80'>
           <div className='relative'>
             {loading && (
