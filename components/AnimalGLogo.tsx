@@ -2,14 +2,14 @@ export default function AnimalGLogo() {
   return (
     <div>
       <svg
-        width={30}
-        height={29}
-        viewBox='0 0 30 29'
+        width={56}
+        height={54}
+        viewBox='0 0 56 54'
         fill='none'
         xmlns='http://www.w3.org/2000/svg'
         xmlnsXlink='http://www.w3.org/1999/xlink'
       >
-        <rect width={30} height={29} rx='14.5' fill='url(#pattern0)' />
+        <rect width={56} height={54} rx={27} fill='url(#pattern0)' />
         <defs>
           <pattern
             id='pattern0'

@@ -7,6 +7,9 @@ import ConvexClientProvider from './ConvexClientProvider';
 export const metadata: Metadata = {
   title: 'Animal-G',
   description: 'Railway Station Animal Detector',
+  icons: {
+    icon: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({
