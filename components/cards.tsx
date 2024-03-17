@@ -1,3 +1,5 @@
+'use client';
+
 import { Id } from '@/convex/_generated/dataModel';
 import TaskImage from './TaskImage';
 import { useMutation } from 'convex/react';
@@ -5,6 +7,7 @@ import { api } from '@/convex/_generated/api';
 import { FaLocationDot } from 'react-icons/fa6';
 import { TiTickOutline } from 'react-icons/ti';
 import { MdTimer } from 'react-icons/md';
+import { useEffect, useState } from 'react';
 
 type Task = {
   _id: Id<'tasks'>;
@@ -21,11 +24,22 @@ type Task = {
 export default function Cards(task: Task) {
   const deleteTask = useMutation(api.tasks.deleteTask);
   const deleteImageById = useMutation(api.images.deleteById);
+  const [timestamp, setTimestamp] = useState(new Date().getTime());
+
+  useEffect(() => {
+    const timerID: NodeJS.Timeout = setInterval(
+      () => setTimestamp(new Date().getTime()),
+      1000
+    );
+
+    return () => {
+      clearInterval(timerID);
+    };
+  }, []);
 
   // Function to convert milliseconds to minutes, hours, or days ago
-  const timeAgo = (timestamp: number): string => {
-    const now = new Date().getTime();
-    const difference = now - timestamp;
+  const timeAgo = (currentTimestamp: number): string => {
+    const difference = currentTimestamp - task._creationTime;
 
     const minutes = Math.floor(difference / (1000 * 60));
     const hours = Math.floor(difference / (1000 * 60 * 60));
@@ -40,7 +54,6 @@ export default function Cards(task: Task) {
     }
   };
 
-  console.log(task);
   return (
     <div className='flex flex-col items-center md:flex-row md:max-w-xl relative overflow-hidden rounded-lg border border-gray-300 bg-white p-4 shadow-md mx-7'>
       <TaskImage {...task} />
@@ -63,7 +76,7 @@ export default function Cards(task: Task) {
           </div>
 
           <p className='text-xs text-gray-400 flex items-center'>
-            <MdTimer /> : {timeAgo(task._creationTime)}
+            <MdTimer /> : {timeAgo(timestamp)}
           </p>
         </div>
         <div className='flex justify-end'>
