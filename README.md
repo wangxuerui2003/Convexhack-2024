@@ -1,7 +1,7 @@
 # AnimalG - Animal Detection Project for Railway Safety
 
 <div style="text-align:center">
-  <img src="democctv.png" alt="Demo" style="width:50%;">
+  <img src="democctv.png" alt="Demo" style="width:100%;">
 </div>
 
 ## Overview
