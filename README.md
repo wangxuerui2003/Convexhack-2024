@@ -5,7 +5,7 @@
 </div>
 
 ## Overview
-AnimalG is a project aimed at preventing railway accidents caused by animals on the tracks. It utilizes cutting-edge technologies including TypeScript, React, TensorFlow for animal detection, and Convex database and Convex file storage for efficient data management.
+AnimalG is a system designed to keep railway tracks safe from animals. It constantly watches for animals on the tracks and, if it finds any, it makes loud noises to scare them away. If the animals don't leave, the system alerts railway authorities and nearby wildlife centers to take action.
 
 ## How It Works
 1. **Animal Detection**: Using TensorFlow, the system continuously scans the railway tracks for the presence of animals.
