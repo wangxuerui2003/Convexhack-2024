@@ -46,6 +46,9 @@ export default function AnimalDetection() {
   const generateUploadUrl = useMutation(api.tasks.generateUploadUrl);
 
   useEffect(() => {
+    let predictionsInterval: NodeJS.Timeout;
+    let video: any;
+
     const runObjectDetection = async () => {
       const video = videoRef.current;
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -55,7 +58,7 @@ export default function AnimalDetection() {
       await video.play();
 
       const model = await cocoSsd.load();
-      setInterval(async () => {
+      predictionsInterval = setInterval(async () => {
         const predictions = await model.detect(video);
         processPredictions(predictions);
       }, 10000);
@@ -63,6 +66,10 @@ export default function AnimalDetection() {
     };
 
     runObjectDetection();
+
+    return () => {
+      clearInterval(predictionsInterval);
+    };
   }, []);
 
   const createTask = async (
