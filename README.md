@@ -1,36 +1,34 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# AnimalG - Animal Detection Project for Railway Safety
 
-## Getting Started
+<div style="text-align:center">
+  <img src="democctv.png" alt="Demo" style="width:50%;">
+</div>
 
-First, run the development server:
+## Overview
+AnimalG is a project aimed at preventing railway accidents caused by animals on the tracks. It utilizes cutting-edge technologies including TypeScript, React, TensorFlow for animal detection, and Convex database and Convex file storage for efficient data management.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## How It Works
+1. **Animal Detection**: Using TensorFlow, the system continuously scans the railway tracks for the presence of animals.
+2. **Monitoring**: If an animal is detected, the system monitors its presence. If the animal remains on the tracks for too long, it indicates a potential danger.
+3. **Noise Emission**: To deter animals from staying on the tracks, the system emits noise to chase them away.
+4. **Notification**: If the noise emission fails to remove the animal, the system sends notifications to the local railway authorities and nearby wildlife centers for immediate action.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Technologies Used
+- **TypeScript**: Used for the backend logic to handle animal detection and notification mechanisms.
+- **React**: Provides a user-friendly interface for monitoring and managing the system.
+- **TensorFlow**: Utilized for real-time animal detection on the railway tracks.
+- **Convex Database**: Stores essential data related to animal detection, notifications, and track monitoring.
+- **Convex File Storage**: Stores images and other multimedia files related to animal detection for reference and analysis.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Components
+1. **Detection Module**: Responsible for real-time animal detection using TensorFlow models.
+2. **Monitoring Interface**: Built with React, it provides a graphical interface for users to monitor the system's status and track animal activities.
+3. **Notification System**: Manages the sending of notifications to railway authorities and wildlife centers in case of prolonged animal presence.
+4. **Data Management**: Utilizes Convex database and Convex file storage for efficient data storage and retrieval.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Benefits
+- **Enhanced Safety**: Minimizes the risk of railway accidents caused by animals on the tracks.
+- **Efficient Monitoring**: Provides real-time monitoring of animal activities on the railway.
+- **GPS Integration**: Integrates GPS technology for precise location tracking of animal presence, enhancing the accuracy of notifications and response efforts.
+- **Timely Response**: Enables prompt action through notifications to relevant authorities in case of prolonged animal presence.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
